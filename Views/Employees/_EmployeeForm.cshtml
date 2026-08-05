@@ -2,7 +2,7 @@
 @{
     var isEdit = Model.Id.HasValue;
     var postUrl = isEdit
-        ? Url.Action("Edit", "Employees", new { id = Model.Id })
+        ? Url.Action("Edit", "Employees")
         : Url.Action("Create", "Employees");
 
     bool HasError(string field) => ViewData.ModelState[field]?.Errors.Count > 0;
@@ -24,6 +24,10 @@
 
     <form action="@postUrl" method="post" data-turbo="true">
         @Html.AntiForgeryToken()
+        @if (isEdit)
+        {
+            <input asp-for="Id" type="hidden" />
+        }
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>

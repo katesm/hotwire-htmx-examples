@@ -14,13 +14,13 @@ public sealed class EmployeesController : Controller
         _store = store;
     }
 
-    [HttpGet]
+    [HttpGet("/Employees")]
     public IActionResult Index()
     {
         return View(_store.GetAll());
     }
 
-    [HttpGet]
+    [HttpGet("/Employees/Form")]
     public IActionResult Form(int? id)
     {
         if (id.HasValue)
@@ -49,7 +49,7 @@ public sealed class EmployeesController : Controller
         return PartialView("_EmployeeModalFrame", new EmployeeFormInput());
     }
 
-    [HttpPost]
+    [HttpPost("/Employees/Create")]
     [ValidateAntiForgeryToken]
     public IActionResult Create(EmployeeFormInput input)
     {
@@ -75,11 +75,14 @@ public sealed class EmployeesController : Controller
         return EmployeeDashboardTurboStream(closeModal: true);
     }
 
-    [HttpPost]
+    [HttpPost("/Employees/Edit")]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, EmployeeFormInput input)
+    public IActionResult Edit(EmployeeFormInput input)
     {
-        input.Id = id;
+        if (!input.Id.HasValue)
+        {
+            return NotFound();
+        }
 
         if (!ModelState.IsValid)
         {
@@ -87,7 +90,7 @@ public sealed class EmployeesController : Controller
         }
 
         var updated = _store.Update(
-            id,
+            input.Id.Value,
             input.EmployeeNumber!,
             input.FirstName!,
             input.LastName!,
@@ -106,7 +109,7 @@ public sealed class EmployeesController : Controller
         return EmployeeDashboardTurboStream(closeModal: true);
     }
 
-    [HttpPost]
+    [HttpPost("/Employees/Delete/{id}")]
     [ValidateAntiForgeryToken]
     public IActionResult Delete(int id)
     {
@@ -117,8 +120,11 @@ public sealed class EmployeesController : Controller
 
     private ContentResult EmployeeDashboardTurboStream(bool closeModal)
     {
+        var employees = _store.GetAll();
+
         return TurboStreamResponse(
-            TurboStream("replace", "employee-table-container", RenderPartial("_EmployeeTable", _store.GetAll())),
+            TurboStream("replace", "employee-stats-container", RenderPartial("_EmployeeStats", employees)),
+            TurboStream("replace", "employee-table-container", RenderPartial("_EmployeeTable", employees)),
             closeModal ? TurboStream("update", "modal-content", string.Empty) : null
         );
     }

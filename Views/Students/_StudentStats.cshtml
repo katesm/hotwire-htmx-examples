@@ -1,0 +1,23 @@
+@model IReadOnlyList<Student>
+@{
+    var yearOneCount = Model.Count(s => s.Year == 1);
+    var finalYearCount = Model.Count(s => s.Year == 4);
+}
+
+
+<div id="student-stats-container" hx-swap-oob="true" class="flex flex-wrap gap-4 mt-6">
+    <div class="rounded-xl bg-white/10 p-4 flex-1">
+        <p class="text-xs uppercase tracking-wide text-cyan-200">Total Students</p>
+        <p class="mt-1 text-2xl font-bold text-white">@Model.Count</p>
+    </div>
+    <div class="rounded-xl bg-white/10 p-4 flex-1">
+        <p class="text-xs uppercase tracking-wide text-cyan-200">Year 1</p>
+        <p class="mt-1 text-2xl font-bold text-white">@yearOneCount</p>
+    </div>
+    <div class="rounded-xl bg-white/10 p-4 flex-1">
+        <p class="text-xs uppercase tracking-wide text-cyan-200">Final Year</p>
+        <p class="mt-1 text-2xl font-bold text-white">@finalYearCount</p>
+    </div>
+</div>  
+
+

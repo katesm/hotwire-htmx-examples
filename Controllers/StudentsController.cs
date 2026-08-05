@@ -12,12 +12,13 @@ public class StudentsController : Controller
         _store = store;
     }
 
+    [HttpGet("/Students")]
     public IActionResult Index()
     {
         return View(_store.GetAll());
     }
 
-    [HttpGet]
+    [HttpGet("/Students/Form")]
     public IActionResult Form(int? id)
     {
         if (id.HasValue)
@@ -37,7 +38,7 @@ public class StudentsController : Controller
         return PartialView("_StudentForm", new StudentFormInput());
     }
 
-    [HttpPost]
+    [HttpPost("/Students/Create")]
     [ValidateAntiForgeryToken]
     public IActionResult Create(StudentFormInput input)
     {
@@ -46,36 +47,32 @@ public class StudentsController : Controller
 
         _store.Add(input.FirstName!, input.LastName!, input.Email!, input.Course!, input.Year!.Value);
 
-        Response.Headers["HX-Retarget"] = "#student-table";
-        Response.Headers["HX-Reswap"]   = "outerHTML";
-        Response.Headers["HX-Trigger"]  = "closeModal";
-        return PartialView("_StudentTable", _store.GetAll());
+        Response.Headers["HX-Trigger-After-Settle"] = "closeModal";
+        return PartialView("_StudentDashboardUpdate", _store.GetAll());
     }
 
-    [HttpPost]
+    [HttpPost("/Students/Edit")]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, StudentFormInput input)
+    public IActionResult Edit(StudentFormInput input)
     {
-        // Ensure the Id in the model matches the route so re-render targets the right action
-        input.Id = id;
+        if (!input.Id.HasValue)
+            return NotFound();
 
         if (!ModelState.IsValid)
             return PartialView("_StudentForm", input);
 
-        var updated = _store.Update(id, input.FirstName!, input.LastName!, input.Email!, input.Course!, input.Year!.Value);
+        var updated = _store.Update(input.Id.Value, input.FirstName!, input.LastName!, input.Email!, input.Course!, input.Year!.Value);
         if (updated is null) return NotFound();
 
-        Response.Headers["HX-Retarget"] = "#student-table";
-        Response.Headers["HX-Reswap"]   = "outerHTML";
-        Response.Headers["HX-Trigger"]  = "closeModal";
-        return PartialView("_StudentTable", _store.GetAll());
+        Response.Headers["HX-Trigger-After-Settle"] = "closeModal";
+        return PartialView("_StudentDashboardUpdate", _store.GetAll());
     }
 
-    [HttpPost]
+    [HttpPost("/Students/Delete/{id}")]
     [ValidateAntiForgeryToken]
     public IActionResult Delete(int id)
     {
         _store.Delete(id);
-        return Content("");
+        return PartialView("_StudentDashboardUpdate", _store.GetAll());
     }
 }

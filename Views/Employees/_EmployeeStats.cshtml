@@ -1,0 +1,20 @@
+@model IReadOnlyList<Employee>
+@{
+    var activeCount = Model.Count(e => e.Status == "Active");
+    var onboardingCount = Model.Count(e => e.Status == "Onboarding" || e.Status == "Probation");
+}
+
+<div id="employee-stats-container" class="flex flex-wrap gap-4 mt-6">
+    <div class="rounded-xl bg-white/10 p-4 flex-1">
+        <p class="text-xs uppercase tracking-wide text-cyan-200">Total Employees</p>
+        <p class="mt-1 text-2xl font-bold">@Model.Count</p>
+    </div>
+    <div class="rounded-xl bg-white/10 p-4 flex-1">
+        <p class="text-xs uppercase tracking-wide text-cyan-200">Active</p>
+        <p class="mt-1 text-2xl font-bold">@activeCount</p>
+    </div>
+    <div class="rounded-xl bg-white/10 p-4 flex-1">
+        <p class="text-xs uppercase tracking-wide text-cyan-200">Onboarding / Probation</p>
+        <p class="mt-1 text-2xl font-bold">@onboardingCount</p>
+    </div>
+</div>

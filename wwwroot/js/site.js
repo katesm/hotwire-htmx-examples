@@ -50,6 +50,20 @@ function syncModalVisibility({ forceOpen = false } = {}) {
     }
 }
 
+function ensureEmployeeStatsTarget() {
+    if (!location.pathname.toLowerCase().startsWith('/employees')) return;
+    if (document.getElementById('employee-stats-container')) return;
+
+    const labels = Array.from(document.querySelectorAll('p'));
+    const totalLabel = labels.find((label) => label.textContent?.trim() === 'Total Employees');
+    const card = totalLabel?.parentElement;
+    const container = card?.parentElement;
+
+    if (container && !container.id) {
+        container.id = 'employee-stats-container';
+    }
+}
+
 let modalFrameObserver;
 
 function attachModalFrameObserver() {
@@ -115,6 +129,7 @@ document.addEventListener("turbo:submit-end", (event) => {
 
 // Re-process hx-* attributes after Turbo Drive replaces the body
 document.addEventListener("turbo:load", () => {
+    ensureEmployeeStatsTarget();
     attachModalFrameObserver();
     syncModalVisibility();
     if (typeof htmx !== "undefined") htmx.process(document.body);
