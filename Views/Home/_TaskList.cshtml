@@ -1,0 +1,16 @@
+@model IReadOnlyList<hotwire_turbo_stimulus_demo.Models.LearningTask>
+
+<turbo-frame id="tasks">
+    <form asp-action="AddTask" method="post" class="flex gap-2">
+        @Html.AntiForgeryToken()
+        <label class="sr-only" for="task-title">New task</label>
+        <input id="task-title" name="title" required maxlength="100" placeholder="Add a learning task" class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-cyan-500 placeholder:text-slate-400 focus:ring-2" />
+        <button class="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-700">Add</button>
+    </form>
+    <ul class="mt-4 space-y-2">
+        @foreach (var task in Model)
+        {
+            <partial name="_TaskRow" model="task" />
+        }
+    </ul>
+</turbo-frame>

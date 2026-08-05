@@ -1,0 +1,90 @@
+@model StudentFormInput
+@{
+    var isEdit = Model.Id.HasValue;
+    var postUrl = isEdit
+        ? Url.Action("Edit", "Students", new { id = Model.Id })
+        : Url.Action("Create", "Students");
+
+    bool HasError(string field) =>
+        ViewData.ModelState[field]?.Errors.Count > 0;
+
+    string InputClass(string field) =>
+        $"w-full rounded-lg border {(HasError(field) ? "border-red-500 bg-red-50" : "border-slate-300")} px-3 py-2 text-sm outline-none ring-cyan-500 focus:ring-2";
+}
+
+<div class="p-6">
+    <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-xl font-bold text-slate-900">@(isEdit ? "Edit Student" : "Add Student")</h2>
+        <button type="button"
+                onclick="document.getElementById('modal').close()"
+                class="rounded-md p-1 text-slate-400 hover:text-slate-600"
+                aria-label="Close">
+            ✕
+        </button>
+    </div>
+
+    <form hx-post="@postUrl"
+          hx-target="#modal-content"
+          hx-swap="innerHTML">
+        @Html.AntiForgeryToken()
+
+        <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label asp-for="FirstName" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                    <input asp-for="FirstName" class="@InputClass("FirstName")" autocomplete="given-name" />
+                    <span asp-validation-for="FirstName" class="mt-1 block text-xs text-red-600"></span>
+                </div>
+                <div>
+                    <label asp-for="LastName" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                    <input asp-for="LastName" class="@InputClass("LastName")" autocomplete="family-name" />
+                    <span asp-validation-for="LastName" class="mt-1 block text-xs text-red-600"></span>
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="Email" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="Email" type="email" class="@InputClass("Email")" autocomplete="email" />
+                <span asp-validation-for="Email" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Course" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <select asp-for="Course" class="@InputClass("Course") bg-white">
+                    <option value="">Select a course…</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Law">Law</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Medicine">Medicine</option>
+                    <option value="Physics">Physics</option>
+                </select>
+                <span asp-validation-for="Course" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Year" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <select asp-for="Year" class="@InputClass("Year") bg-white">
+                    <option value="">Select year…</option>
+                    <option value="1">Year 1</option>
+                    <option value="2">Year 2</option>
+                    <option value="3">Year 3</option>
+                    <option value="4">Year 4</option>
+                </select>
+                <span asp-validation-for="Year" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-3">
+            <button type="button"
+                    onclick="document.getElementById('modal').close()"
+                    class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Cancel
+            </button>
+            <button type="submit"
+                    class="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-700">
+                @(isEdit ? "Save Changes" : "Add Student")
+            </button>
+        </div>
+    </form>
+</div>

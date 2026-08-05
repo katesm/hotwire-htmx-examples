@@ -1,0 +1,28 @@
+@model Student
+
+<tr id="student-row-@Model.Id" class="border-b border-slate-100 last:border-0">
+    <td class="py-3 pr-6 font-medium text-slate-900">@Model.FirstName @Model.LastName</td>
+    <td class="py-3 pr-6 text-slate-600">@Model.Email</td>
+    <td class="py-3 pr-6 text-slate-600">@Model.Course</td>
+    <td class="py-3 pr-6 text-slate-600">Year @Model.Year</td>
+    <td class="py-3">
+        <div class="flex justify-end gap-2">
+            <button
+                hx-get="@Url.Action("Form", "Students", new { id = Model.Id })"
+                hx-target="#modal-content"
+                hx-swap="innerHTML"
+                class="rounded-md bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-200">
+                Edit
+            </button>
+            <button
+                type="button"
+                hx-post="@Url.Action("Delete", "Students", new { id = Model.Id })"
+                hx-target="#student-row-@Model.Id"
+                hx-swap="outerHTML"
+                hx-confirm="Delete @Model.FirstName @Model.LastName?"
+                class="rounded-md bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 hover:bg-red-100 ">
+                Delete
+            </button>
+        </div>
+    </td>
+</tr>

@@ -1,0 +1,23 @@
+@model IReadOnlyList<Employee>
+
+<div id="employee-table-container" class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+        <thead>
+            <tr class="border-b border-slate-200 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <th class="pb-3 pr-4">Employee</th>
+                <th class="pb-3 pr-4">Department</th>
+                <th class="pb-3 pr-4">Job</th>
+                <th class="pb-3 pr-4">Manager</th>
+                <th class="pb-3 pr-4">Start Date</th>
+                <th class="pb-3 pr-4">Status</th>
+                <th class="pb-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model)
+            {
+                <partial name="_EmployeeRow" model="employee" />
+            }
+        </tbody>
+    </table>
+</div>

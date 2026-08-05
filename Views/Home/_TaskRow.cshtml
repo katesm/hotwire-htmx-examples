@@ -1,0 +1,12 @@
+@model hotwire_turbo_stimulus_demo.Models.LearningTask
+
+<li id="task_@Model.Id" class="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+    <span class="text-sm @(Model.IsComplete ? "text-slate-400 line-through" : "text-slate-800")">@Model.Title</span>
+    <form asp-action="ToggleTask" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button class="rounded-md px-2 py-1 text-xs font-semibold @(Model.IsComplete ? "bg-slate-200 text-slate-700" : "bg-emerald-100 text-emerald-800")">
+            @(Model.IsComplete ? "Undo" : "Complete")
+        </button>
+    </form>
+</li>

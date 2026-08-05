@@ -1,0 +1,115 @@
+@model EmployeeFormInput
+@{
+    var isEdit = Model.Id.HasValue;
+    var postUrl = isEdit
+        ? Url.Action("Edit", "Employees", new { id = Model.Id })
+        : Url.Action("Create", "Employees");
+
+    bool HasError(string field) => ViewData.ModelState[field]?.Errors.Count > 0;
+
+    string InputClass(string field) =>
+        $"w-full rounded-lg border {(HasError(field) ? "border-red-500 bg-red-50" : "border-slate-300")} px-3 py-2 text-sm outline-none ring-cyan-500 focus:ring-2";
+}
+
+<div class="p-6">
+    <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-xl font-bold text-slate-900">@(isEdit ? "Edit Employee" : "Add Employee")</h2>
+        <button type="button"
+                onclick="document.getElementById('modal')?.close()"
+                class="rounded-md p-1 text-slate-400 hover:text-slate-600"
+                aria-label="Close">
+            x
+        </button>
+    </div>
+
+    <form action="@postUrl" method="post" data-turbo="true">
+        @Html.AntiForgeryToken()
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+                <label asp-for="EmployeeNumber" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="EmployeeNumber" class="@InputClass("EmployeeNumber")" />
+                <span asp-validation-for="EmployeeNumber" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="Email" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="Email" type="email" class="@InputClass("Email")" />
+                <span asp-validation-for="Email" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="FirstName" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="FirstName" class="@InputClass("FirstName")" />
+                <span asp-validation-for="FirstName" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="LastName" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="LastName" class="@InputClass("LastName")" />
+                <span asp-validation-for="LastName" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="Department" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="Department" class="@InputClass("Department")" />
+                <span asp-validation-for="Department" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="JobTitle" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="JobTitle" class="@InputClass("JobTitle")" />
+                <span asp-validation-for="JobTitle" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="EmploymentType" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <select asp-for="EmploymentType" class="@InputClass("EmploymentType") bg-white">
+                    <option value="">Select type...</option>
+                    <option value="Permanent">Permanent</option>
+                    <option value="Fixed Term">Fixed Term</option>
+                    <option value="Part Time">Part Time</option>
+                    <option value="Hourly Paid">Hourly Paid</option>
+                </select>
+                <span asp-validation-for="EmploymentType" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="Grade" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="Grade" class="@InputClass("Grade")" />
+                <span asp-validation-for="Grade" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="Campus" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="Campus" class="@InputClass("Campus")" />
+                <span asp-validation-for="Campus" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="Manager" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="Manager" class="@InputClass("Manager")" />
+                <span asp-validation-for="Manager" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="StartDate" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <input asp-for="StartDate" type="date" class="@InputClass("StartDate")" />
+                <span asp-validation-for="StartDate" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+            <div>
+                <label asp-for="Status" class="mb-1 block text-sm font-medium text-slate-700"></label>
+                <select asp-for="Status" class="@InputClass("Status") bg-white">
+                    <option value="">Select status...</option>
+                    <option value="Active">Active</option>
+                    <option value="Onboarding">Onboarding</option>
+                    <option value="Probation">Probation</option>
+                    <option value="Leave">Leave</option>
+                </select>
+                <span asp-validation-for="Status" class="mt-1 block text-xs text-red-600"></span>
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-3">
+            <button type="button"
+                    onclick="document.getElementById('modal')?.close()"
+                    class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Cancel
+            </button>
+            <button type="submit"
+                    class="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-700">
+                @(isEdit ? "Save Changes" : "Add Employee")
+            </button>
+        </div>
+    </form>
+</div>
