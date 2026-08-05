@@ -1,4 +1,4 @@
-# Hotwire MVC Lab
+# Hotwire + HTMX MVC Lab
 
 This repository is a deliberately small ASP.NET Core MVC app for learning server-rendered UI patterns.
 It contains two CRUD-style experiences so you can compare approaches side by side:
